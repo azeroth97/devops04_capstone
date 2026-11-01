@@ -1,0 +1,39 @@
+services:
+  database:
+    image: postgres:16
+    container_name: scoreboard_db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scoreboard_database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=scoreboard
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d scoreboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  scoreboard_be:
+    image: thongth04/scoreboard_be:latest
+    container_name: scoreboard_be
+    ports:
+      - 8080:8080
+    env_file:
+      - ./env/scoreboard-be/.env
+    depends_on:
+      database:
+        condition: service_healthy
+
+  scraper:
+    build: ../scraper
+    image: scoreboard_scraper
+    container_name: scraper
+    restart: "no"
+    profiles: ["scraper"]
+    env_file:
+      - ./env/scraper/.env
+    depends_on:
+      - database

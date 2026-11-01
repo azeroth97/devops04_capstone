@@ -1,0 +1,6 @@
+services:
+  scoreboard_fe:
+    image: thongth04/scoreboard_fe:latest
+    container_name: scoreboard_fe
+    ports:
+      - 3000:80

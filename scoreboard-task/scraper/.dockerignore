@@ -1,0 +1,28 @@
+# Gradle
+.gradle
+build/
+!build/libs/*.jar
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Git
+.git
+.gitignore
+
+# OS
+.DS_Store
+
+# Env / secrets
+.env
+*.env.local
+
+# Logs
+*.log
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml

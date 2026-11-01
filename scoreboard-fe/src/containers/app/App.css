@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.center-nav{
+  @apply text-gray-900 hover:text-purple-700 font-medium transition
+}
+
+.main-content{
+  @apply max-w-7xl mx-auto;
+}
+
+.table-header{
+  @apply text-base font-medium text-gray-600 tracking-wider;
+}
+
+.filter{
+  @apply px-4 border border-gray-300 rounded-lg bg-white hover:bg-gray-50
+}
+
+.filter-dropdown{
+  @apply py-2 focus:outline-none focus:ring-2 focus:ring-purple-500
+}
+
+.league-card{
+  @apply w-full flex items-center px-4 py-5 text-left transition-all hover:bg-gray-50 active:bg-gray-100 border border-blue-200
+}
+
+.league-logo{
+  @apply w-32 h-32 mr-10 flex-shrink-0 flex items-center justify-center
+}
+
+.league-name{
+  @apply text-2xl font-black tracking-wide text-gray-900
+}
+
+.main-footer{
+  @apply block text-gray-900 font-semibold hover:text-purple-700 transition
+}
+
+.bottom-footer{
+  @apply hover:text-purple-700 transition
+}

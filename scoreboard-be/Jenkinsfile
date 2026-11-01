@@ -1,0 +1,48 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout Code') {
+      steps {git branch: 'main', credentialsId: 'github-login', url: 'https://github.com/azeroth97/scoreboard-be.git'}
+    }
+
+    stage('Build Image') {
+      steps {sh 'docker build -t thongth04/scoreboard_be:latest .'}
+    }
+
+    stage('Docker Login') {
+      steps {
+        withCredentials(
+          [usernamePassword(credentialsId:'docker-login', usernameVariable:'DOCKER_USER', passwordVariable:'DOCKER_PASS')]
+        ){
+          sh 'docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}'
+        }
+      }
+    }
+
+    stage('Push Image To Hub') {
+      steps {sh 'docker push thongth04/scoreboard_be:latest'}
+    }
+
+    stage('Deploy') {
+      steps {
+        withCredentials([
+          sshUserPrivateKey(credentialsId:'ssh-login', keyFileVariable:'SSH_KEY',usernameVariable:'SSH_USER'),
+          usernamePassword(credentialsId:'docker-login', usernameVariable:'DOCKER_USER', passwordVariable:'DOCKER_PASS'),
+          string(credentialsId:'ip-server-be', variable:'IP_SERVER_BE')
+        ]) {
+          sh '''
+            ssh -o StrictHostKeyChecking=no -i "${SSH_KEY}" "${SSH_USER}@${IP_SERVER_BE}" bash -s <<-EOF
+              echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+              cd /home/ubuntu/docker-compose
+              docker compose down
+              docker compose build scoreboard_be
+              docker compose up -d
+              docker image prune -f
+            EOF
+          '''
+        }
+      }
+    }
+  }
+}

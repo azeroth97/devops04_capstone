@@ -1,0 +1,29 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'azeroth.ScoreboardCrawler'
+}
+
+group = 'azeroth'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jsoup:jsoup:1.16.1"
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}

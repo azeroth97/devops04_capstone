@@ -1,0 +1,46 @@
+- name: Install Nginx
+  hosts: myhosts
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: Install Nginx
+      become: true
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+
+    - name: Create nginx ssl directory
+      become: true
+      ansible.builtin.file:
+        path: /etc/nginx/ssl
+        state: directory
+        owner: root
+        group: root
+        mode: "777"
+
+    - name: Copy file SSL crt
+      become: true
+      ansible.builtin.copy:
+        src: ./keys/th497.uk.crt
+        dest: /etc/nginx/ssl/th497.uk.crt
+        owner: root
+        group: root
+        mode: "777"
+
+    - name: Copy file SSL key
+      become: true
+      ansible.builtin.copy:
+        src: ./keys/th497.uk.key
+        dest: /etc/nginx/ssl/th497.uk.key
+        owner: root
+        group: root
+        mode: "777"
+
+    - name: Check Status Nginx
+      become: true
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
