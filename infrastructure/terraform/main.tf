@@ -1,36 +1,39 @@
 provider "aws" {
   region = "ap-southeast-1"
 }
-
 data "aws_ami" "ubuntu" {
   most_recent = true
-
   filter {
     name   = "name"
     values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
-
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "app_server" {
-  count = 2
-
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  key_name      = "devops04"
-
-  vpc_security_group_ids = [
-    aws_security_group.terraform_sg.id
-  ]
-
-  tags = {
-    Name = "terraform-ec2-${count.index + 1}"
+locals {
+  servers = {
+    "scoreboard_be" = "t3.small"
+    "scoreboard_fe" = "t3.small"
+    "jenkins" = "m7i-flex.large"
+    "grafana" = "m7i-flex.large"
   }
 }
 
-resource "aws_security_group" "terraform_sg" {
-  name = "terraform-ec2-sg"
+resource "aws_instance" "app_server" {
+  for_each = local.servers
+
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = each.value
+  key_name               = "devops04"
+  vpc_security_group_ids = [aws_security_group.scoreboard_sg.id]
+
+  tags = {
+    Name = each.key
+  }
+}
+
+resource "aws_security_group" "scoreboard_sg" {
+  name = "scoreboard-sg"
 
   # inbound
   ingress {
@@ -61,6 +64,6 @@ resource "aws_security_group" "terraform_sg" {
   }
 }
 
-output "public_ip" {
-  value = aws_instance.app_server[*].public_ip
+output "public_ips" {
+  value = { for name, inst in aws_instance.app_server : name => inst.public_ip }
 }
