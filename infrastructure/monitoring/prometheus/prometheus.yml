@@ -4,7 +4,7 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
 
-  - job_name: "node"
+  - job_name: "database"
     scrape_interval: 1m
     static_configs:
-      - targets: ["host:9100"]
+      - targets: ["52.76.199.208:9100"]

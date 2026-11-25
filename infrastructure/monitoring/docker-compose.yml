@@ -36,17 +36,6 @@ services:
       - prometheus-data:/prometheus
       - ./prometheus:/etc/prometheus
 
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.12.1
-    container_name: node_exporter
-    command:
-      - '--path.rootfs=/host'
-    network_mode: host
-    pid: host
-    restart: unless-stopped
-    volumes:
-      - '/:/host:ro,rslave'
-
 volumes:
   grafana-data:
   loki-data:

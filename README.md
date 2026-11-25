@@ -3,7 +3,7 @@
 ## Terraform
 
 ```bash
-  docker run --name terraform -d -it -v ./:/root/terraform ubuntu
+  docker run --name terraform -d -it -v ./terraform:/root/terraform ubuntu
   docker exec -it terraform bash
 
   # Download terraform installation file and move to /usr/local/bin/
@@ -28,7 +28,7 @@
 ## Ansible
 
 ```bash
-  docker run --name ansible -d -it -v ./:/root/ansible ubuntu
+  docker run --name ansible -d -it -v ./ansible:/root/ansible ubuntu
   docker exec -it ansible bash
 
   cd ~/ansible
@@ -59,7 +59,7 @@
   echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
     https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
     /etc/apt/sources.list.d/jenkins.list > /dev/null
-  sudo apt update && sudo apt install jenkins
+  sudo apt update && sudo apt install -y jenkins
 
   sudo systemctl status jenkins
   sudo systemctl edit jenkins
@@ -74,8 +74,9 @@
   sudo mkdir -p /var/cache/jenkins/plugins
   sudo chown -R jenkins:jenkins /var/cache/jenkins/plugins
 
-  # Check config
-  systemd-analyze verify jenkins.service
+  # Add jenkins to group docker
+  sudo usermod -aG docker jenkins
+  sudo systemctl restart jenkins
 
   # Credentials to setup
   ssh-login
