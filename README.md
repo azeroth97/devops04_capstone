@@ -1,6 +1,19 @@
-# Scoreboard Setup
+# Scoreboard Project
 
-## Terraform
+## Overview
+
+```bash
+  Scoreboard Project là một dự án cập nhật kết quả trận đấu, bảng xếp hạng các giải đấu hàng đầu thế giới.
+
+  Công nghệ sử dụng:
+    - Backend: SpringBoot + Postgres
+    - Frontend: Reactjs
+    - Scaper: Jsoup (Java)
+```
+
+## Installation
+
+### Terraform
 
 ```bash
   docker run --name terraform -d -it -v ./terraform:/root/terraform ubuntu
@@ -25,7 +38,7 @@
   terraform destroy
 ```
 
-## Ansible
+### Ansible
 
 ```bash
   docker run --name ansible -d -it -v ./ansible:/root/ansible ubuntu
@@ -45,7 +58,7 @@
   ansible-playbook -i inventory.ini playbook-add-domain.yaml
 ```
 
-## Jenkins
+### Jenkins
 
 ```bash
   # Install Java
@@ -86,7 +99,7 @@
   ip-server-fe
 ```
 
-## Github Action
+### Github Action
 
 ```bash
   # Credentials to setup
